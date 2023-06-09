@@ -14,6 +14,8 @@
                         <p>{{ event.description }}</p>
                         <h4>LOCATION: </h4>
                         <p>{{ event.location }}</p>
+                        <h4>DATE:</h4>
+                        <p>{{ event.startDate }}</p>
                     </div>
                     <div class="text-end">
                         <p>Tickets Remaining: {{ availableTickets }}</p>
