@@ -16,7 +16,7 @@
                         <p>{{ event.location }}</p>
                     </div>
                     <div class="text-end">
-                        <p>{{  }}</p>
+                        <p>Tickets Remaining: {{ availableTickets }}</p>
                         <button v-if="!hasTicket && !event.isCanceled || availableTickets == 0" @click="createTicket()" class="btn btn-outline-light">GET TICKET</button>
                         <p class="text-danger" v-if="event.isCanceled">EVENT IS CANCELLED</p>
                     </div>
