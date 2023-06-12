@@ -41,7 +41,7 @@
                 <div class="col-10">
                     <h3>Comments:</h3>
                     <div class="row">
-                        <div class="col-12">
+                        <div v-if="user.id && !event.isCanceled" class="col-12">
                             <form @submit.prevent="createComment()">
                                 <section class="row justify-content-between">
                                     <input type="text" class="form-control" name="body" v-model="editable.body"><button type="submit" class="btn btn-outline-success">COMMENT</button>
