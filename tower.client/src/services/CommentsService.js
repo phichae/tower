@@ -11,6 +11,18 @@ class CommentsService{
         AppState.comments = res.data.map(c => new Comment(c))
     }
 
+    async createComment(commentData){
+        const res = await api.post('api/comments', commentData)
+        logger.log('[CREATING COMMENT]', res.data)
+        AppState.comments.push(new Comment(res.data))
+    }
+
+    async deleteComment(commentId){
+        const res = await api.delete(`api/comments/${commentId}`)
+        logger.log('[DELETING COMMENT]', res.data)
+        AppState.comments = AppState.comments.filter(c => c.id != commentId)
+    }
+
 }
 
 export const commentsService = new CommentsService()

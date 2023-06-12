@@ -1,7 +1,5 @@
 <template>
   <div class="bg-dark d-flex">
-    <header>
-    </header>
     <main class="container-fluid">
       <section class="row justify-content-center">
         <div class="col-11">

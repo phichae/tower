@@ -4,7 +4,7 @@
             <section class="row">
                 <div class="col-12 p-4 d-flex justify-content-between">
                     <h2>{{ event.name }}</h2>
-                    <button @click="cancelEvent()" class="btn btn-outline-danger">Cancel Event</button>
+                    <button v-if="event.creatorId == user.id && !event.isCanceled" @click="cancelEvent()" class="btn btn-outline-danger">Cancel Event</button>
                 </div>
                 <div class="col-md-4 p-4">
                     <img class="img-fluid rounded" :src="event.coverImg" :alt="event.name">
@@ -18,8 +18,8 @@
                         <p>{{ event.startDate }}</p>
                     </div>
                     <div class="text-end">
-                        <p>Tickets Remaining: {{ availableTickets }}</p>
-                        <button v-if="!hasTicket && !event.isCanceled || availableTickets == 0" @click="createTicket()" class="btn btn-outline-light">GET TICKET</button>
+                        <p v-if="!event.isCanceled">Tickets Remaining: {{ availableTickets }}</p>
+                        <button v-if="!hasTicket && !event.isCanceled && availableTickets > 0" @click="createTicket()" class="btn btn-outline-light">GET TICKET</button>
                         <p class="text-danger" v-if="event.isCanceled">EVENT IS CANCELLED</p>
                     </div>
                 </div>
@@ -40,6 +40,15 @@
             <section class="row justify-content-center">
                 <div class="col-10">
                     <h3>Comments:</h3>
+                    <div class="row">
+                        <div class="col-12">
+                            <form @submit.prevent="createComment()">
+                                <section class="row justify-content-between">
+                                    <input type="text" class="form-control" name="body" v-model="editable.body"><button type="submit" class="btn btn-outline-success">COMMENT</button>
+                                </section>
+                            </form>
+                        </div>
+                    </div>
                     <div class="col-12" v-for="c in comments">
                         <CommentCard :comment="c"/>
                     </div>
@@ -54,7 +63,7 @@
 
 <script>
 import { computed } from '@vue/reactivity';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { AppState } from '../AppState.js';
 import { logger } from '../utils/Logger.js';
@@ -65,6 +74,7 @@ import { commentsService } from '../services/CommentsService.js'
 export default {
     setup(){
         const route = useRoute()
+        const editable = ref({})
 
         async function getEventById() {
             try {
@@ -103,6 +113,8 @@ export default {
             getCommentsByEventId()
         })
         return {
+            editable,
+
             event: computed(() => AppState.activeEvent),
             hasTicket: computed(() => AppState.tickets.find(t => t.accountId == AppState.user.id)),
             tickets: computed(() => AppState.tickets),
@@ -124,6 +136,17 @@ export default {
                     if (await Pop.confirm()){
                         await eventsService.cancelEvent(route.params.eventId)
                     }
+                } catch (error) {
+                    logger.log(error)
+                    Pop.toast(error.message, 'error')
+                }
+            },
+
+            async createComment(){
+                try {
+                    const formData = editable.value
+                    formData.eventId = route.params.eventId
+                    await commentsService.createComment(formData)
                 } catch (error) {
                     logger.log(error)
                     Pop.toast(error.message, 'error')

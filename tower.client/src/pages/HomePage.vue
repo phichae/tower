@@ -10,7 +10,7 @@
         </section>
 
         <section class="row justify-content-center pb-2">
-          <div class="col-10 d-flex justify-content-around">
+          <div class="col-8 d-md-flex justify-content-around ">
             <button @click="filterBy= ''" class="btn btn-outline-light">ALL</button>
             <button @click="filterBy= 'concert'" class="btn btn-outline-light">CONCERT</button>
             <button @click="filterBy= 'convention'" class="btn btn-outline-light">CONVENTION</button>
@@ -86,7 +86,4 @@ export default {
   }
 }
 
-  .nav-bar{
-
-  }
 </style>

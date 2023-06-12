@@ -8,6 +8,7 @@ class TicketsService{
     async createTicket(eventId){
         const res = await api.post('api/tickets', { eventId })
         AppState.tickets.push(new Ticket(res.data))
+        AppState.activeEvent.ticketCount++
         logger.log('[CREATING TICKET]', res.data)
     }
 
@@ -24,7 +25,8 @@ class TicketsService{
     }
 
     async deleteTicket(ticketId){
-        const res = await api.delete('api/')
+        const res = await api.delete(`api/tickets/${ticketId}`)
+        AppState.myTickets.filter(t => t.id == ticketId)
     }
 }
 
